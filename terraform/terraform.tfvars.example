@@ -1,0 +1,7 @@
+cloud_id        = "b1g39tv39lgangn6kmem"
+folder_id       = "b1gdaf9fvs991j9gprpd"
+image_id        = "fd8tgblovu5dklvrp29h"
+zone            = "ru-central1-b"
+ssh_private_key = "~/.ssh/appuser"
+user            = "user"
+icount          = 2

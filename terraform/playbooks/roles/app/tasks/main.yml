@@ -1,0 +1,9 @@
+---
+# tasks file for app
+- name: Install
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    name: "{{ app_pkg }}"
+    state: present
+  notify: Enable and start service

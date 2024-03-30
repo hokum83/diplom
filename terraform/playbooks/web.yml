@@ -1,0 +1,28 @@
+---
+- name: Install and start nginx
+  hosts: all
+  gather_facts: false
+
+  pre_tasks:
+    - name: Wait for connection
+      ansible.builtin.wait_for_connection:
+
+    - name: Gathering facts
+      ansible.builtin.setup:
+
+  roles:
+    - role: app
+      app_pkg: nginx
+      app_svc: nginx
+
+  post_tasks:
+    - name: Rewrite index.html
+      become: true
+      ansible.builtin.template:
+        src: index.html.j2
+        dest: /var/www/html/index.html
+        mode: preserve
+
+    - name: Test page
+      ansible.builtin.uri:
+        url: http://{{ ansible_default_ipv4['address'] }}

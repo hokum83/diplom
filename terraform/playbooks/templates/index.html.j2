@@ -1,0 +1,17 @@
+<html>
+
+<head>
+    <title>Ansible Index Page</title>
+</head>
+
+<body>
+    <h1>Welcome to {{ ansible_hostname }}</h1>
+    <p>
+        CPU: {{ ansible_processor_cores }} cores<br />
+        Memory: {{ ansible_memory_mb['real']['used']}}mb out of {{ ansible_memory_mb['real']['total']}}mb<br />
+        HDD: {{ ansible_devices['vda']['size'] }}<br />
+        Address: {{ ansible_default_ipv4['address']}}
+    </p>
+</body>
+
+</html>
