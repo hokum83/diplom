@@ -4,10 +4,13 @@ variable "cloud_id" {
 variable "folder_id" {
   description = "Folder"
 }
-variable "zone" {
+variable "zone1" {
   description = "Zone"
-  # Значение по умолчанию
-  default = "ru-central1-a"
+  default     = "ru-central1-a"
+}
+variable "zone2" {
+  description = "Zone"
+  default     = "ru-central1-b"
 }
 variable "image_id" {
   description = "Disk image"
@@ -18,7 +21,15 @@ variable "ssh_private_key" {
 variable "user" {
   description = "User for ansible connection"
 }
-variable "icount" {
-  default     = 1
-  description = "VMs count"
+variable "key_file" {
+  description = "Service Account Key File"
+}
+
+variable "zbx-db-name" {
+}
+
+variable "zbx-db-user" {
+}
+
+variable "zbx-db-password" {
 }

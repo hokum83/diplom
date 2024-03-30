@@ -1,6 +1,6 @@
 ---
 - name: Install and start nginx
-  hosts: all
+  hosts: web
   gather_facts: false
 
   pre_tasks:
