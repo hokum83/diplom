@@ -300,16 +300,6 @@ resource "yandex_mdb_postgresql_user" "zbx-db-user" {
   password   = var.zbx-db-password
 }
 
-
-
-
-
-
-
-
-
-
-
 resource "yandex_compute_instance" "jump" {
   name        = "jump-host"
   depends_on  = [yandex_compute_instance_group.instance-group-1]
