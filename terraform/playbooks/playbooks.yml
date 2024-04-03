@@ -1,0 +1,4 @@
+- import_playbook: web.yml
+- import_playbook: zbx-srv.yml
+- import_playbook: zbx-fe.yml
+- import_playbook: zbx-agent.yml

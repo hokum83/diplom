@@ -1,6 +1,3 @@
-variable "cloud_id" {
-  description = "Cloud"
-}
 variable "folder_id" {
   description = "Folder"
 }
@@ -16,8 +13,16 @@ variable "image_id" {
   description = "Disk image"
 }
 
-variable "key_file" {
-  description = "Service Account Key File"
+variable "network_1_id" {
+  description = "network_1_id"
+}
+
+variable "subnet_1_id" {
+  description = "subnet_1_id"
+}
+
+variable "subnet_2_id" {
+  description = "subnet_2_id"
 }
 
 variable "zbx_db_name" {
@@ -25,3 +30,4 @@ variable "zbx_db_name" {
 
 variable "zbx_db_user" {
 }
+

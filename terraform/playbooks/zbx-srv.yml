@@ -1,0 +1,67 @@
+---
+- name: --- Install zabbix server ---
+  hosts: zbx-srv
+  gather_facts: false
+  vars_files:
+    - ../tf_ansible_vars_file.yml
+
+  pre_tasks:
+    - name: Wait for connection
+      ansible.builtin.wait_for_connection:
+
+    - name: Gathering facts
+      ansible.builtin.setup:
+
+  tasks:
+    - name: Install repo
+      become: true
+      ansible.builtin.apt:
+        deb: https://repo.zabbix.com/zabbix/6.4/ubuntu/pool/main/z/zabbix-release/zabbix-release_6.4-1+ubuntu22.04_all.deb
+
+    - name: Install packages
+      become: true
+      ansible.builtin.apt:
+        update_cache: true
+        name:
+          - zabbix-server-pgsql
+          - zabbix-sql-scripts
+          - zabbix-agent
+          - postgresql-client
+        state: present
+
+    - name: Import schema
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          zcat /usr/share/zabbix-sql-scripts/postgresql/server.sql.gz | psql "host={{ zbx_db_cluster }} port=6432 \
+          user={{ zbx_db_user }} \
+          password={{ zbx_db_password }} \
+          dbname={{ zbx_db_name }}"
+        executable: /bin/bash
+      register: my_output # <- Registers the command output.
+      changed_when: my_output.rc != 0
+
+    - name: Set password for connection to pgsql DB
+      become: true
+      ansible.builtin.lineinfile:
+        path: /etc/zabbix/zabbix_server.conf
+        line: "{{ item.line }}"
+        regexp: "{{ item.regexp }}"
+      loop:
+        - line: DBPassword="{{ zbx_db_password }}"
+          regexp: ^DBPassword='
+        - line: DBUser="{{ zbx_db_user }}"
+          regexp: ^DBUser='
+        - line: DBName="{{ zbx_db_name }}"
+          regexp: '^DBName='
+        - line: DBHost="{{ zbx_db_cluster }}"
+          regexp: '^DBHost='
+      notify: Enable and restart service
+
+  handlers:
+    - name: Enable and restart service
+      become: true
+      ansible.builtin.service:
+        name: "zabbix-server"
+        state: restarted
+        enabled: true

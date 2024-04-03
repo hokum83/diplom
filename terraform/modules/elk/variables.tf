@@ -15,13 +15,21 @@ variable "zone2" {
 variable "image_id" {
   description = "Disk image"
 }
-
+variable "ssh_private_key" {
+  description = "Private key for ansible connection"
+}
+variable "user" {
+  description = "User for ansible connection"
+}
 variable "key_file" {
   description = "Service Account Key File"
 }
 
-variable "zbx_db_name" {
+variable "zbx-db-name" {
 }
 
-variable "zbx_db_user" {
+variable "zbx-db-user" {
+}
+
+variable "zbx-db-password" {
 }
