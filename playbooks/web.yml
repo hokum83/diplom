@@ -1,0 +1,44 @@
+---
+- name: --- Install and start nginx ---
+  hosts: web
+  gather_facts: false
+  vars:
+    app_pkg: nginx
+    app_svc: nginx
+
+  pre_tasks:
+    - name: Wait for connection
+      ansible.builtin.wait_for_connection:
+
+    - name: Gathering facts
+      ansible.builtin.setup:
+
+  roles:
+    - role: app
+
+  post_tasks:
+    - name: Rewrite index.html
+      become: true
+      ansible.builtin.template:
+        src: index.html.j2
+        dest: /var/www/html/index.html
+        mode: preserve
+
+    - name: Rewrite config
+      become: true
+      ansible.builtin.template:
+        src: default.j2
+        dest: /etc/nginx/sites-available/default
+        mode: preserve
+      notify: Restart nginx service
+
+    - name: Test page
+      ansible.builtin.uri:
+        url: http://{{ ansible_default_ipv4['address'] }}
+
+  handlers:
+    - name: Restart nginx service
+      become: true
+      ansible.builtin.service:
+        name: "{{ app_svc }}"
+        state: restarted

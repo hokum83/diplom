@@ -1,0 +1,14 @@
+---
+collections:
+  - name: ansible.netcommon
+    version: 6.0.0
+
+  - name: ansible.posix
+
+  - name: ansible.utils
+    source: git+https://github.com/ansible-collections/ansible.utils.git,v3.1.0
+
+roles:
+  - name: geerlingguy.apache
+
+  - name: geerlingguy.php

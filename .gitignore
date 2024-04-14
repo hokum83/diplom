@@ -3,4 +3,7 @@
 terraform.tfvars
 terraform.tfstate*
 key.json
+tf_ansible_vars_file.yml
+.venv
+meta.txt
 ansible.cfg

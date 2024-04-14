@@ -1,0 +1,303 @@
+---
+- name: --- Install Elasticsearch ---
+  hosts: elasticsearch
+  gather_facts: false
+  become: true
+  vars_files:
+    - ../tf_ansible_vars_file.yml
+
+  pre_tasks:
+    - name: Wait for connection
+      ansible.builtin.wait_for_connection:
+
+    - name: Gathering facts
+      ansible.builtin.setup:
+
+  tasks:
+    - name: Add repo apt key
+      ansible.builtin.apt_key:
+        keyserver: keyserver.ubuntu.com
+        id: D27D666CD88E42B4
+      tags: elasticsearch
+
+    - name: Add repo
+      ansible.builtin.apt_repository:
+        repo: deb [trusted=yes] https://mirror.yandex.ru/mirrors/elastic/8/ stable main
+        state: present
+      tags: elasticsearch
+
+    - name: Install packages
+      ansible.builtin.apt:
+        pkg:
+          - elasticsearch
+          - metricbeat
+        state: present
+        update_cache: true
+      tags: elasticsearch
+
+    - name: Update config file
+      ansible.builtin.template:
+        src: elasticsearch.yml.j2
+        dest: /etc/elasticsearch/elasticsearch.yml
+        mode: preserve
+      tags: elasticsearch
+
+    - name: Update metricbeat config file
+      ansible.builtin.template:
+        src: metricbeat.yml.j2
+        dest: /etc/metricbeat/metricbeat.yml
+        mode: preserve
+      tags: elasticsearch
+
+    - name: Enable modules
+      ansible.builtin.command: metricbeat modules enable "{{ item }}"
+      with_items:
+        - linux
+        - elasticsearch-xpack
+      register: elasticsearch_output
+      changed_when: elasticsearch_output.rc != 0
+      tags: elasticsearch
+
+    - name: Start service
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: restarted
+        enabled: true
+      with_items:
+        - elasticsearch
+        - metricbeat
+      tags: elasticsearch
+
+### Kibana ###
+- name: --- Install Kibana ---
+  hosts: kibana
+  gather_facts: false
+  become: true
+  vars_files:
+    - ../tf_ansible_vars_file.yml
+
+  pre_tasks:
+    - name: Wait for connection
+      ansible.builtin.wait_for_connection:
+
+    - name: Gathering facts
+      ansible.builtin.setup:
+
+  tasks:
+    - name: Add repo apt key
+      ansible.builtin.apt_key:
+        keyserver: keyserver.ubuntu.com
+        id: D27D666CD88E42B4
+      tags: kibana
+
+    - name: Add repo
+      ansible.builtin.apt_repository:
+        repo: deb [trusted=yes] https://mirror.yandex.ru/mirrors/elastic/8/ stable main
+        state: present
+      tags: kibana
+
+    - name: Install packages
+      ansible.builtin.apt:
+        pkg:
+          - kibana
+          - metricbeat
+        update_cache: true
+      tags: kibana
+
+    - name: Update config file
+      ansible.builtin.template:
+        src: kibana.yml.j2
+        dest: /etc/kibana/kibana.yml
+        mode: preserve
+      tags: kibana
+
+    - name: Update metricbeat config file
+      ansible.builtin.template:
+        src: metricbeat.yml.j2
+        dest: /etc/metricbeat/metricbeat.yml
+        mode: preserve
+      tags: kibana
+
+    - name: Enable modules
+      ansible.builtin.command: metricbeat modules enable "{{ item }}"
+      with_items:
+        - linux
+        - kibana-xpack
+      register: kibana_output
+      changed_when: kibana_output.rc != 0
+      tags: kibana
+
+    - name: Start service
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: restarted
+        enabled: true
+      with_items:
+        - kibana
+        - metricbeat
+      tags: kibana
+
+    - name: Pause play until a URL is reachable from this host
+      ansible.builtin.uri:
+        url: "http://{{ elk_kibana_fqdn }}:5601/api/status"
+        follow_redirects: none
+        method: GET
+      register: _result
+      until: _result.status == 200
+      retries: 30
+      delay: 30
+
+    - name: Setup metricbeat dashboard
+      ansible.builtin.command: metricbeat setup --dashboards
+      register: metricbeat_dash_output
+      changed_when: metricbeat_dash_output.rc != 0
+      tags: kibana
+
+### Logstash ###
+- name: --- Install Logstash ---
+  hosts: logstash
+  gather_facts: false
+  become: true
+  vars_files:
+    - ../tf_ansible_vars_file.yml
+
+  pre_tasks:
+    - name: Wait for connection
+      ansible.builtin.wait_for_connection:
+
+    - name: Gathering facts
+      ansible.builtin.setup:
+
+  tasks:
+    - name: Add repo apt key
+      ansible.builtin.apt_key:
+        keyserver: keyserver.ubuntu.com
+        id: D27D666CD88E42B4
+      tags: logstash
+
+    - name: Add repo
+      ansible.builtin.apt_repository:
+        repo: deb [trusted=yes] https://mirror.yandex.ru/mirrors/elastic/8/ stable main
+        state: present
+      tags: logstash
+
+    - name: Install packages
+      ansible.builtin.apt:
+        pkg:
+          - logstash
+          - metricbeat
+        update_cache: true
+      tags: logstash
+
+    - name: Update config file
+      ansible.builtin.template:
+        src: logstash.yml.j2
+        dest: /etc/logstash/logstash.yml
+        mode: preserve
+      tags: logstash
+
+    - name: Update metricbeat config file
+      ansible.builtin.template:
+        src: metricbeat.yml.j2
+        dest: /etc/metricbeat/metricbeat.yml
+        mode: preserve
+      tags: logstash
+
+    - name: Enable modules
+      ansible.builtin.command: metricbeat modules enable "{{ item }}"
+      with_items:
+        - linux
+        - logstash-xpack
+      register: logstash_output
+      changed_when: logstash_output.rc != 0
+      tags: logstash
+
+    - name: Start service
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: restarted
+        enabled: true
+      with_items:
+        - logstash
+        - metricbeat
+      tags: logstash
+
+### Filebeat ###
+- name: --- Install Filebeat ---
+  hosts: web
+  gather_facts: false
+  become: true
+  vars_files:
+    - ../tf_ansible_vars_file.yml
+
+  pre_tasks:
+    - name: Wait for connection
+      ansible.builtin.wait_for_connection:
+
+    - name: Gathering facts
+      ansible.builtin.setup:
+
+  tasks:
+    - name: Add repo apt key
+      ansible.builtin.apt_key:
+        keyserver: keyserver.ubuntu.com
+        id: D27D666CD88E42B4
+      tags: filebeat
+
+    - name: Add repo
+      ansible.builtin.apt_repository:
+        repo: deb [trusted=yes] https://mirror.yandex.ru/mirrors/elastic/8/ stable main
+        state: present
+      tags: filebeat
+
+    - name: Install packages
+      ansible.builtin.apt:
+        pkg:
+          - filebeat
+        update_cache: true
+      tags: filebeat
+
+    - name: Update config file
+      ansible.builtin.template:
+        src: filebeat.yml.j2
+        dest: /etc/filebeat/filebeat.yml
+        mode: preserve
+      tags: filebeat
+
+    - name: Update nginx config file
+      ansible.builtin.template:
+        src: nginx.yml.j2
+        dest: /etc/filebeat/modules.d/nginx.yml
+        mode: preserve
+      tags: filebeat
+
+    - name: Enable modules
+      ansible.builtin.command: filebeat modules enable "{{ item }}"
+      with_items:
+        - nginx
+      register: filebeat_output
+      changed_when: filebeat_output.rc != 0
+      tags: filebeat
+
+    - name: Reconf
+      ansible.builtin.command: filebeat setup --pipelines -e
+      with_items:
+        - nginx
+      register: filebeatreconf_output
+      changed_when: filebeatreconf_output.rc != 0
+      tags: filebeat
+
+    - name: Start service
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: restarted
+        enabled: true
+      with_items:
+        - filebeat
+      tags: filebeat
+
+    - name: Setup filebeat dashboard
+      ansible.builtin.command: filebeat setup --dashboards
+      register: filebeat_dash_output
+      changed_when: filebeat_dash_output.rc != 0
+      tags: filebeat

@@ -1,0 +1,260 @@
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "dashboard.create",
+    "params": [
+        {
+            "auto_start": "1",
+            "display_period": "30",
+            "name": "diplom-dashboard",
+            "pages": [
+                {
+                    "widgets": [
+                        {
+                            "fields": [
+                                {% for host in groups['web'] %}
+                                {
+                                    "name": "ds.hosts.0.{{ loop.index }}",
+                                    "type": "1",
+                                    "value": "{{ hostvars[host]['ansible_facts']['fqdn'] }}"
+                                },
+                                {% endfor %}
+                                {
+                                    "name": "ds.items.0.0",
+                                    "type": "1",
+                                    "value": "Nginx: Connections active"
+                                },
+                                {
+                                    "name": "ds.color.0",
+                                    "type": "1",
+                                    "value": "FF465C"
+                                },
+                                {
+                                        "name": "simple_triggers",
+                                        "type": "0",
+                                        "value": "1"
+                                },
+                                {
+                                    "name": "righty",
+                                    "type": "0",
+                                    "value": "0"
+                                }
+                            ],
+                            "height": "6",
+                            "name": "Nginx Connections",
+                            "type": "svggraph",
+                            "view_mode": "0",
+                            "width": "12",
+                            "x": "12",
+                            "y": "0"
+                        },
+                        {
+                            "fields": [
+                                {% for host in groups['all'] %}
+                                {
+                                    "name": "ds.hosts.0.{{ loop.index }}",
+                                    "type": "1",
+                                    "value": "{{ hostvars[host]['ansible_facts']['fqdn'] }}"
+                                },
+                                {% endfor %}
+                                {
+                                    "name": "ds.items.0.0",
+                                    "type": "1",
+                                    "value": "Linux: CPU utilization"
+                                },
+                                {
+                                    "name": "ds.color.0",
+                                    "type": "1",
+                                    "value": "FF465C"
+                                },
+                                {
+                                        "name": "simple_triggers",
+                                        "type": "0",
+                                        "value": "1"
+                                },
+                                {
+                                    "name": "righty",
+                                    "type": "0",
+                                    "value": "0"
+                                }
+                            ],
+                            "height": "5",
+                            "name": "CPU Utilization",
+                            "type": "svggraph",
+                            "view_mode": "0",
+                            "width": "12",
+                            "x": "0",
+                            "y": "6"
+                        },
+                        {
+                            "fields": [
+                                {% for host in groups['all'] %}
+                                {
+                                    "name": "ds.hosts.0.{{ loop.index }}",
+                                    "type": "1",
+                                    "value": "{{ hostvars[host]['ansible_facts']['fqdn'] }}"
+                                },
+                                {% endfor %}
+                                {
+                                    "name": "ds.items.0.0",
+                                    "type": "1",
+                                    "value": "Linux: Memory utilization"
+                                },
+                                {
+                                    "name": "righty",
+                                    "type": "0",
+                                    "value": "0"
+                                },
+                                {
+                                        "name": "simple_triggers",
+                                        "type": "0",
+                                        "value": "1"
+                                },
+                                {
+                                    "name": "ds.color.0",
+                                    "type": "1",
+                                    "value": "00BFFF"
+                                }
+                            ],
+                            "height": "5",
+                            "name": "Memory Utilization",
+                            "type": "svggraph",
+                            "view_mode": "0",
+                            "width": "12",
+                            "x": "12",
+                            "y": "6"
+                        },
+                        {
+                            "fields": [
+                                {% for host in groups['all'] %}
+                                {
+                                    "name": "ds.hosts.0.{{ loop.index }}",
+                                    "type": "1",
+                                    "value": "{{ hostvars[host]['ansible_facts']['fqdn'] }}"
+                                },
+                                {% endfor %}
+                                {
+                                    "name": "ds.items.0.0",
+                                    "type": "1",
+                                    "value": "/: Space utilization"
+                                },
+                                {
+                                        "name": "simple_triggers",
+                                        "type": "0",
+                                        "value": "1"
+                                },
+                                {
+                                    "name": "ds.color.0",
+                                    "type": "1",
+                                    "value": "00FF00"
+                                },
+                                {
+                                    "name": "righty",
+                                    "type": "0",
+                                    "value": "0"
+                                }
+                            ],
+                            "height": "5",
+                            "name": "Disk Utilisation",
+                            "type": "svggraph",
+                            "view_mode": "0",
+                            "width": "12",
+                            "x": "0",
+                            "y": "11"
+                        },
+                        {
+                            "fields": [
+                                {% for host in groups['all'] %}
+                                {
+                                    "name": "ds.hosts.0.{{ loop.index }}",
+                                    "type": "1",
+                                    "value": "{{ hostvars[host]['ansible_facts']['fqdn'] }}"
+                                },
+                                {% endfor %}
+                                {
+                                    "name": "ds.items.0.0",
+                                    "type": "1",
+                                    "value": "Interface eth0: Bits received"
+                                },
+                                {
+                                    "name": "ds.color.0",
+                                    "type": "1",
+                                    "value": "FF6F00"
+                                },
+                                {% for host in groups['all'] %}
+                                {
+                                    "name": "ds.hosts.1.{{ loop.index }}",
+                                    "type": "1",
+                                    "value": "{{ hostvars[host]['ansible_facts']['fqdn'] }}"
+                                },
+                                {% endfor %}
+                                {
+                                    "name": "ds.items.1.0",
+                                    "type": "1",
+                                    "value": "Interface eth0: Bits sent"
+                                },
+                                {
+                                    "name": "ds.color.1",
+                                    "type": "1",
+                                    "value": "4000FF"
+                                },
+                                {
+                                    "name": "righty",
+                                    "type": "0",
+                                    "value": "0"
+                                }
+                            ],
+                            "height": "5",
+                            "name": "Traffic",
+                            "type": "svggraph",
+                            "view_mode": "0",
+                            "width": "12",
+                            "x": "12",
+                            "y": "11"
+                        },
+                        {
+                            "fields": [
+                                {
+                                    "name": "show",
+                                    "type": "0",
+                                    "value": "3"
+                                },
+                                {
+                                    "name": "groupids",
+                                    "type": "2",
+                                    "value": "4"
+                                },
+                                {
+                                    "name": "severities",
+                                    "type": "0",
+                                    "value": "3"
+                                },
+                                {
+                                    "name": "severities",
+                                    "type": "0",
+                                    "value": "4"
+                                },
+                                {
+                                    "name": "severities",
+                                    "type": "0",
+                                    "value": "5"
+                                }
+                            ],
+                            "height": "6",
+                            "name": "",
+                            "type": "problems",
+                            "view_mode": "0",
+                            "width": "12",
+                            "x": "0",
+                            "y": "0"
+                        }
+                    ]
+                }
+            ],
+            "private": "1",
+            "userGroups": [],
+            "userid": "1",
+            "users": []
+        }
+    ]
+}

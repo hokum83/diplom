@@ -1,0 +1,8 @@
+cloud_id    = "your_cloud_id"
+folder_id   = "your_folder_id"
+image_id    = "your_image_id"
+zone1       = "your_zone1, e.g., ru-central1-a"
+zone2       = "your_zone2, e.g., ru-central1-b"
+key_file    = "path_to_your_key_file/key.json"
+zbx_db_user = "your_zabbix_user_name"
+zbx_db_name = "your_zabbix_db_name"

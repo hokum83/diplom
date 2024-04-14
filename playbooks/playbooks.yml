@@ -1,0 +1,3 @@
+- import_playbook: web.yml
+- import_playbook: zbx.yml
+- import_playbook: elk.yml
