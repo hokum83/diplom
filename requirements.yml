@@ -5,10 +5,6 @@ collections:
 
   - name: ansible.posix
 
+  # С новой версией 4.0.0 плохо работает community.zabbix
   - name: ansible.utils
-    source: git+https://github.com/ansible-collections/ansible.utils.git,v3.1.0
-
-roles:
-  - name: geerlingguy.apache
-
-  - name: geerlingguy.php
+    version: 3.1.0
