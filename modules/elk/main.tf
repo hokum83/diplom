@@ -82,6 +82,7 @@ resource "yandex_compute_instance" "elk-el" {
   boot_disk {
     initialize_params {
       image_id = var.image_id
+      size     = 30
     }
   }
 

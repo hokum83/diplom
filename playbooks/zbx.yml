@@ -13,6 +13,9 @@
     - name: Gathering facts
       ansible.builtin.setup:
 
+    - name: Wait for /var/lib/dpkg/lock-frontend to be released 
+      ansible.builtin.shell: while lsof /var/lib/dpkg/lock-frontend ; do sleep 10; done;
+
   roles:
     - role: community.zabbix.zabbix_server
       zabbix_server_dbport: 6432
@@ -33,6 +36,9 @@
 
     - name: Gathering facts
       ansible.builtin.setup:
+
+    - name: Wait for /var/lib/dpkg/lock-frontend to be released 
+      ansible.builtin.shell: while lsof /var/lib/dpkg/lock-frontend ; do sleep 10; done;
 
   roles:
     - role: geerlingguy.apache
@@ -59,6 +65,9 @@
 
     - name: Gathering facts
       ansible.builtin.setup:
+
+    - name: Wait for /var/lib/dpkg/lock-frontend to be released 
+      ansible.builtin.shell: while lsof /var/lib/dpkg/lock-frontend ; do sleep 10; done;
 
   roles:
     - role: community.zabbix.zabbix_agent
@@ -93,6 +102,9 @@
     - name: Gathering facts
       ansible.builtin.setup:
 
+    - name: Wait for /var/lib/dpkg/lock-frontend to be released 
+      ansible.builtin.shell: while lsof /var/lib/dpkg/lock-frontend ; do sleep 10; done;
+
   roles:
     - role: community.zabbix.zabbix_agent
       become: false
@@ -122,6 +134,9 @@
 
     - name: Gathering facts
       ansible.builtin.setup:
+
+    - name: Wait for /var/lib/dpkg/lock-frontend to be released 
+      ansible.builtin.shell: while lsof /var/lib/dpkg/lock-frontend ; do sleep 10; done;
 
   roles:
     - role: community.zabbix.zabbix_agent

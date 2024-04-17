@@ -13,6 +13,10 @@
     - name: Gathering facts
       ansible.builtin.setup:
 
+    - name: Wait for /var/lib/dpkg/lock-frontend to be released 
+      ansible.builtin.shell: while lsof /var/lib/dpkg/lock-frontend ; do sleep 10; done;
+
+
   tasks:
     - name: Add repo apt key
       ansible.builtin.apt_key:
@@ -82,6 +86,10 @@
 
     - name: Gathering facts
       ansible.builtin.setup:
+
+    - name: Wait for /var/lib/dpkg/lock-frontend to be released 
+      ansible.builtin.shell: while lsof /var/lib/dpkg/lock-frontend ; do sleep 10; done;
+
 
   tasks:
     - name: Add repo apt key
@@ -168,6 +176,10 @@
     - name: Gathering facts
       ansible.builtin.setup:
 
+    - name: Wait for /var/lib/dpkg/lock-frontend to be released 
+      ansible.builtin.shell: while lsof /var/lib/dpkg/lock-frontend ; do sleep 10; done;
+
+
   tasks:
     - name: Add repo apt key
       ansible.builtin.apt_key:
@@ -236,6 +248,10 @@
 
     - name: Gathering facts
       ansible.builtin.setup:
+
+    - name: Wait for /var/lib/dpkg/lock-frontend to be released 
+      ansible.builtin.shell: while lsof /var/lib/dpkg/lock-frontend ; do sleep 10; done;
+
 
   tasks:
     - name: Add repo apt key
